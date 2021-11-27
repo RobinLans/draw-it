@@ -11,10 +11,18 @@ module.exports = {
         drawBg: "url('/src/assets/drawItbg.jpeg')",
         // drawItBg: "url('public/drawItbg.jpeg')",
       },
+      height: {
+        canvas: "720px",
+      },
+      width: {
+        canvas: "1080px",
+      },
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      boxShadow: ["active"],
+    },
   },
   plugins: [],
 };

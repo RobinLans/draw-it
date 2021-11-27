@@ -7,3 +7,7 @@
 .text {
   @apply font-bold text-black text-opacity-70 text-center;
 }
+
+.canvasBtns {
+  @apply bg-white h-16 w-16 rounded-lg shadow-lg active:shadow-none;
+}
