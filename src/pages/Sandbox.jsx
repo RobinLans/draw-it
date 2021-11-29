@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import trashCan from "../assets/trash-can-hand-drawn-symbol.png";
 import download from "../assets/download.png";
 import homeIcon from "../assets/house-hand-drawn-construction.png";
@@ -17,8 +17,81 @@ const homeVariant = {
 };
 
 function Sandbox() {
+  const canvasRef = useRef(null);
+  const ctxRef = useRef(null);
+  const colorRef = useRef(null);
   const navigate = useNavigate();
   const [hoverHome, setHoverHome] = useState(false);
+  const [painting, setPainting] = useState(false);
+  const [color, setColor] = useState("#000000");
+  const [canvas, setCanvas] = useState(null);
+
+  useEffect(() => {
+    // if (canvas.current) {
+    //   setCtx(canvas.current.getContext("2d"));
+    // }
+    const canvas = canvasRef.current;
+    canvas.height = 720;
+    canvas.width = 1080;
+
+    const ctx = canvas.getContext("2d");
+    ctx.linceCap = "round";
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 5;
+    ctxRef.current = ctx;
+  }, []);
+
+  function startPosition({ nativeEvent }) {
+    const { offsetX, offsetY } = nativeEvent;
+    ctxRef.current.beginPath();
+    ctxRef.current.moveTo(offsetX, offsetY);
+    setPainting(true);
+    // draw(e);
+  }
+
+  function finishedPosition() {
+    ctxRef.current.closePath();
+    setPainting(false);
+    // ctx.beginPath();
+  }
+
+  function draw({ nativeEvent }) {
+    if (!painting) return;
+    const { offsetX, offsetY } = nativeEvent;
+    ctxRef.current.lineTo(offsetX, offsetY);
+    ctxRef.current.stroke();
+
+    // if (!painting) return;
+    // ctx.lineWidh = 10;
+    // ctx.lineCap = "round";
+
+    // ctx.lineTo(e.clientX, e.clientY);
+    // ctx.stroke();
+    // ctx.beginPath();
+    // ctx.moveTo(e.clientX, e.clientY);
+  }
+
+  // ctx.strokeStyle = "red";
+  // ctx.lineWidth = 5;
+  // ctx.strokeRect(50, 50, 200, 200);
+  // ctx.strokeStyle = "blue";
+  // ctx.strokeRect(100, 100, 200, 200);
+
+  // ctx.beginPath();
+  // ctx.moveTo(100, 100);
+  // ctx.lineTo(200, 100);
+  // ctx.lineTo(200, 150);
+  // ctx.stroke();
+
+  function handleColorChange(e) {
+    console.log(e.target.value);
+    setColor(e.target.value);
+  }
+
+  useEffect(() => {
+    const ctx = canvasRef.current.getContext("2d");
+    ctx.strokeStyle = color;
+  }, [color, setColor]);
 
   function goHome() {
     navigate("/", { replace: true });
@@ -27,6 +100,14 @@ function Sandbox() {
   return (
     <div className="flex w-full h-full justify-center items-center">
       <div className="relative bg-white w-canvas h-canvas rounded-3xl shadow-lg">
+        <canvas
+          className=" rounded-3xl"
+          ref={canvasRef}
+          onMouseDown={startPosition}
+          onMouseUp={finishedPosition}
+          onMouseLeave={finishedPosition}
+          onMouseMove={draw}
+        ></canvas>
         <button
           className="  absolute -top-24 flex items-center"
           onClick={goHome}
@@ -65,6 +146,8 @@ function Sandbox() {
                 <input
                   type="color"
                   className="w-32 h-32 bg-transparent border-none cursor-pointer outline-none absolute -left-20 -top-20"
+                  ref={colorRef}
+                  onChange={handleColorChange}
                 />
               </div>
             </button>
