@@ -24,12 +24,9 @@ function Sandbox() {
   const [hoverHome, setHoverHome] = useState(false);
   const [painting, setPainting] = useState(false);
   const [color, setColor] = useState("#000000");
-  const [canvas, setCanvas] = useState(null);
+  // const [canvas, setCanvas] = useState(null);
 
   useEffect(() => {
-    // if (canvas.current) {
-    //   setCtx(canvas.current.getContext("2d"));
-    // }
     const canvas = canvasRef.current;
     canvas.height = 720;
     canvas.width = 1080;
@@ -46,13 +43,11 @@ function Sandbox() {
     ctxRef.current.beginPath();
     ctxRef.current.moveTo(offsetX, offsetY);
     setPainting(true);
-    // draw(e);
   }
 
   function finishedPosition() {
     ctxRef.current.closePath();
     setPainting(false);
-    // ctx.beginPath();
   }
 
   function draw({ nativeEvent }) {
@@ -60,28 +55,7 @@ function Sandbox() {
     const { offsetX, offsetY } = nativeEvent;
     ctxRef.current.lineTo(offsetX, offsetY);
     ctxRef.current.stroke();
-
-    // if (!painting) return;
-    // ctx.lineWidh = 10;
-    // ctx.lineCap = "round";
-
-    // ctx.lineTo(e.clientX, e.clientY);
-    // ctx.stroke();
-    // ctx.beginPath();
-    // ctx.moveTo(e.clientX, e.clientY);
   }
-
-  // ctx.strokeStyle = "red";
-  // ctx.lineWidth = 5;
-  // ctx.strokeRect(50, 50, 200, 200);
-  // ctx.strokeStyle = "blue";
-  // ctx.strokeRect(100, 100, 200, 200);
-
-  // ctx.beginPath();
-  // ctx.moveTo(100, 100);
-  // ctx.lineTo(200, 100);
-  // ctx.lineTo(200, 150);
-  // ctx.stroke();
 
   function handleColorChange(e) {
     console.log(e.target.value);
