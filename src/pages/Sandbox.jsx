@@ -4,6 +4,7 @@ import download from "../assets/download.png";
 import homeIcon from "../assets/house-hand-drawn-construction.png";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import SizeSelect from "../components/SizeSelect";
 
 const homeVariant = {
   hidden: {
@@ -24,6 +25,8 @@ function Sandbox() {
   const [hoverHome, setHoverHome] = useState(false);
   const [painting, setPainting] = useState(false);
   const [color, setColor] = useState("#000000");
+  const [showSelect, setShowSelect] = useState(false);
+  const [brushSize, setBrushSize] = useState(5);
   // const [canvas, setCanvas] = useState(null);
 
   useEffect(() => {
@@ -34,7 +37,7 @@ function Sandbox() {
     const ctx = canvas.getContext("2d");
     ctx.linceCap = "round";
     ctx.strokeStyle = color;
-    ctx.lineWidth = 5;
+    ctx.lineWidth = brushSize;
     ctxRef.current = ctx;
   }, []);
 
@@ -58,7 +61,6 @@ function Sandbox() {
   }
 
   function handleColorChange(e) {
-    console.log(e.target.value);
     setColor(e.target.value);
   }
 
@@ -67,8 +69,22 @@ function Sandbox() {
     ctx.strokeStyle = color;
   }, [color, setColor]);
 
+  useEffect(() => {
+    const ctx = canvasRef.current.getContext("2d");
+    ctx.lineWidth = brushSize;
+  }, [brushSize, setBrushSize]);
+
+  function clearCanvas() {
+    const ctx = canvasRef.current.getContext("2d");
+    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+  }
+
   function goHome() {
     navigate("/", { replace: true });
+  }
+
+  function handleShowSelectShowing() {
+    setShowSelect(!showSelect);
   }
 
   return (
@@ -125,10 +141,16 @@ function Sandbox() {
                 />
               </div>
             </button>
-            <button className="canvasBtns mb-2 ">
-              <p className=" w-14  text-5xl text-center ">3</p>
+            <button
+              className="canvasBtns mb-2 "
+              onClick={handleShowSelectShowing}
+            >
+              <p className=" w-14  text-5xl text-center ">{brushSize}</p>
             </button>
-            <button className="canvasBtns mb-2 flex justify-center items-center">
+            <button
+              className="canvasBtns mb-2 flex justify-center items-center"
+              onClick={clearCanvas}
+            >
               <img src={trashCan} alt="trashCan" className="h-10" />
             </button>
           </div>
@@ -141,6 +163,15 @@ function Sandbox() {
             />
           </button>
         </div>
+
+        {showSelect && (
+          <AnimatePresence>
+            <SizeSelect
+              setBrushSize={setBrushSize}
+              setShowSelect={setShowSelect}
+            ></SizeSelect>
+          </AnimatePresence>
+        )}
       </div>
     </div>
   );
