@@ -1,45 +1,45 @@
 import React, { useState, useRef, useEffect } from "react";
 import trashCan from "../assets/trash-can-hand-drawn-symbol.png";
 import download from "../assets/download.png";
-import homeIcon from "../assets/house-hand-drawn-construction.png";
-import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+
+import { AnimatePresence } from "framer-motion";
 import SizeSelect from "../components/SizeSelect";
 
-const homeVariant = {
-  hidden: {
-    opacity: 0,
-    x: -10,
-  },
-  visible: {
-    opacity: 0.9,
-    x: 0,
-  },
-};
+import HomeButton from "../components/HomeButton";
 
 function Sandbox() {
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
   const colorRef = useRef(null);
-  const navigate = useNavigate();
-  const [hoverHome, setHoverHome] = useState(false);
+
   const [painting, setPainting] = useState(false);
   const [color, setColor] = useState("#000000");
   const [showSelect, setShowSelect] = useState(false);
   const [brushSize, setBrushSize] = useState(5);
-  // const [canvas, setCanvas] = useState(null);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  window.addEventListener("resize", () => {
+    setWindowWidth(window.innerWidth);
+  });
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    canvas.height = 720;
-    canvas.width = 1080;
+    if (windowWidth < 1536) {
+      canvas.height = 480;
+      canvas.width = 720;
+    } else {
+      canvas.height = 720;
+      canvas.width = 1080;
+    }
 
     const ctx = canvas.getContext("2d");
-    ctx.linceCap = "round";
+    ctx.fillStyle = "white";
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
     ctx.strokeStyle = color;
     ctx.lineWidth = brushSize;
     ctxRef.current = ctx;
-  }, []);
+  }, [windowWidth]);
 
   function startPosition({ nativeEvent }) {
     const { offsetX, offsetY } = nativeEvent;
@@ -79,17 +79,33 @@ function Sandbox() {
     ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
   }
 
-  function goHome() {
-    navigate("/", { replace: true });
-  }
-
   function handleShowSelectShowing() {
     setShowSelect(!showSelect);
   }
 
+  function handleDownload() {
+    if (!canvasRef.current) return;
+    const canvas = canvasRef.current;
+
+    canvas.toBlob(function (blob) {
+      if (!blob) {
+        return;
+      }
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.download =
+        "this-is-a-very-nice-pictture-that-i-drew-and-i-want-to-save-it-so-that-i-can-show-it-to-my-father-and-make-him-proud-of-my-achievments.png";
+      link.href = url;
+      link.click();
+
+      URL.revokeObjectURL(url);
+    });
+  }
+
   return (
     <div className="flex w-full h-full justify-center items-center">
-      <div className="relative bg-white w-canvas h-canvas rounded-3xl shadow-lg">
+      <div className="canvasContainer">
         <canvas
           className=" rounded-3xl"
           ref={canvasRef}
@@ -98,64 +114,34 @@ function Sandbox() {
           onMouseLeave={finishedPosition}
           onMouseMove={draw}
         ></canvas>
-        <button
-          className="  absolute -top-24 flex items-center"
-          onClick={goHome}
-          onMouseEnter={() => {
-            setHoverHome(true);
-          }}
-          onMouseLeave={() => {
-            setHoverHome(false);
-          }}
-        >
-          <img src={homeIcon} alt="home" className="h-20 opacity-70 " />
-          <AnimatePresence>
-            {hoverHome && (
-              <motion.h1
-                className="text-5xl text"
-                variants={homeVariant}
-                initial="hidden"
-                animate="visible"
-                transition={{
-                  ease: "easeInOut",
-                  type: "spring",
-                  duration: 0.2,
-                }}
-                exit="hidden"
-              >
-                Home
-              </motion.h1>
-            )}
-          </AnimatePresence>
-        </button>
-        <div className="absolute top-0 -left-20 flex flex-col justify-between h-full">
+        <HomeButton />
+
+        <div className="btnsDiv">
           <div className="flex flex-col">
-            <button className="canvasBtns mb-2 flex justify-center items-center">
-              {/* <div className="bg-red-600 w-8 h-8 rounded-lg"></div> */}
-              <div className="relative w-10 h-10 overflow-hidden rounded-full cursor-pointer ">
+            <button className="colorNTrashBtn">
+              <div className="colorDiv">
                 <input
                   type="color"
-                  className="w-32 h-32 bg-transparent border-none cursor-pointer outline-none absolute -left-20 -top-20"
+                  className="colorInput"
                   ref={colorRef}
                   onChange={handleColorChange}
                 />
               </div>
             </button>
             <button
-              className="canvasBtns mb-2 "
+              className="canvasBtns mb-2"
               onClick={handleShowSelectShowing}
             >
-              <p className=" w-14  text-5xl text-center ">{brushSize}</p>
+              <p className="w-14 text-5xl text-center">{brushSize}</p>
             </button>
-            <button
-              className="canvasBtns mb-2 flex justify-center items-center"
-              onClick={clearCanvas}
-            >
+            <button className="colorNTrashBtn" onClick={clearCanvas}>
               <img src={trashCan} alt="trashCan" className="h-10" />
             </button>
           </div>
-          <button className="canvasBtns flex justify-center items-center">
-            {" "}
+          <button
+            className="canvasBtns flex justify-center items-center"
+            onClick={handleDownload}
+          >
             <img
               src={download}
               alt="download"

@@ -32,6 +32,7 @@ function SizeSelect(props) {
         {brushSizes?.map((size) => {
           return (
             <div
+              key={size}
               className="w-full h-10 border-b-2 border-gray-100  flex justify-center hover:bg-gray-100 cursor-pointer"
               onClick={() => {
                 handleSizeClick(size);

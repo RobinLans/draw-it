@@ -8,6 +8,26 @@
   @apply font-bold text-black text-opacity-70 text-center;
 }
 
+.btnsDiv {
+  @apply absolute top-0 -left-20 flex flex-col justify-between h-full;
+}
+
 .canvasBtns {
   @apply bg-white h-16 w-16 rounded-lg shadow-lg active:shadow-none;
+}
+
+.colorNTrashBtn {
+  @apply bg-white h-16 w-16 rounded-lg shadow-lg active:shadow-none mb-2 flex justify-center items-center;
+}
+
+.canvasContainer {
+  @apply relative bg-white w-canvasSmall h-canvasSmall 2xl:w-canvasBig 2xl:h-canvasBig rounded-3xl shadow-lg;
+}
+
+.colorDiv {
+  @apply relative w-10 h-10 overflow-hidden rounded-full cursor-pointer;
+}
+
+.colorInput {
+  @apply w-32 h-32 bg-transparent border-none cursor-pointer outline-none absolute -left-20 -top-20;
 }

@@ -12,10 +12,12 @@ module.exports = {
         // drawItBg: "url('public/drawItbg.jpeg')",
       },
       height: {
-        canvas: "720px",
+        canvasBig: "720px",
+        canvasSmall: "480px",
       },
       width: {
-        canvas: "1080px",
+        canvasBig: "1080px",
+        canvasSmall: "720px",
       },
     },
   },

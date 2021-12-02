@@ -10,12 +10,14 @@ function Home() {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
-      <h1 className="absolute top-20 text text-9xl">DrawIt</h1>
+      <h1 className="absolute top-14  2xl:top-20 text text-7xl 2xl:text-9xl">
+        DrawIt
+      </h1>
       <div className="flex flex-col">
         <motion.div variants={linkVariant} whileHover="hover" className="my-6">
           <Link
             to="/sandbox"
-            className="relative text text-8xl"
+            className="relative text text-6xl 2xl:text-8xl"
             onMouseEnter={() => {
               setSbHover(true);
             }}
@@ -31,7 +33,7 @@ function Home() {
                 transition={{ ease: "easeInOut", duration: 0.2 }}
                 src={arrow}
                 alt="arrow"
-                className="absolute opacity-70 transform -rotate-90 w-14 top-8 -left-14"
+                className="absolute opacity-70 transform -rotate-90 w-10 top-5 -left-10 2xl:w-14 2xl:top-8 2xl:-left-14"
               />
             )}
           </Link>
@@ -39,7 +41,7 @@ function Home() {
         <motion.div variants={linkVariant} whileHover="hover" className="my-6">
           <Link
             to="/pictionary"
-            className="relative text text-8xl "
+            className="relative text text-6xl 2xl:text-8xl "
             onMouseEnter={() => {
               setPHover(true);
             }}
@@ -55,7 +57,7 @@ function Home() {
                 transition={{ ease: "easeInOut", duration: 0.2 }}
                 src={arrow}
                 alt="arrow"
-                className="absolute opacity-70 transform -rotate-90 w-14 top-8 -left-14"
+                className="absolute opacity-70 transform -rotate-90 w-10 top-5 -left-10 2xl:w-14 2xl:top-8 2xl:-left-14"
               />
             )}
           </Link>
